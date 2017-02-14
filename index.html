@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>vue-admin-demo</title>
+  <style>
+  body{
+    margin:0;
+  }
+    #menu{
+      width:230px;
+      float:left;
+    }
+    .right{
+      margin-left:230px;
+    }
+
+    .tab{
+     display: inline-block;
+     width:100px;
+     border:1px solid gray;
+     border-bottom-width: 0;
+     margin-top:5px;
+     margin-right:5px;
+     padding:5px;
+    }
+    .x-panel{
+      display: none;
+    }
+    .x-panel.active{
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app"></div>
+  <div id="menu">
+    <div v-for="menu in menus" @click="createTab(menu)">
+      {{menu.name}}
+    </div>
+  </div>
+  <div class="right">
+    <div id="tabs" class="tabs">
+      <div class="tab" v-for="tab in tabs" @click="showTab()">
+        {{tab.name}}
+      </div>
+    </div>
+    <div id="panels">
+        <div class="x-panel active" id="x-panel-welcome">
+          欢迎
+        </div>
+    </div>
+
+  </div>
+</body>
+</html>
