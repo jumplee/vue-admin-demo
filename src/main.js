@@ -1,16 +1,14 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import User from './app/User'
 
-import App from './App'
-import router from './router'
-
-
-var counter = 0;
+var counter = 0
+var uuid_tpl = 'x-panel-'
 
 function uuid() {
-  return 'x-panel-' + counter++
+  return uuid_tpl + counter++
 }
-var active_panel_id = 'x-panel-welcome';
+var ele=document.getElementById;
 var menu = new Vue({
   el: '#menu',
   data: {
@@ -21,25 +19,22 @@ var menu = new Vue({
   methods: {
     createTab: function (menu) {
       require.ensure([], function (require) {
-        var User = require( './module/User').default
-
-        var vm = new User()
+        var vm = new Vue(User)
+        var id = uuid()
+        vm.msg = 'hello ' + id
         vm.$mount()
         var el = document.createElement('div')
-        var id = uuid()
         el.id = id
         el.className = 'x-panel active'
         el.appendChild(vm.$el)
-        $('#' + active_panel_id).removeClass('active');
-        active_panel_id = id
         document.getElementById('panels').appendChild(el)
         tabs.tabs.push({
           name: 'haha',
-          id: id
+          id: id,
+          vm: vm
         })
+        tabs.active_panel_index = tabs.tabs.length-1
       })
-
-
     }
   }
 
@@ -49,11 +44,33 @@ var tabs = new Vue({
   data: {
     tabs: [{
       name: '首页',
-      id: 'x-panel-welcome'
-    }]
+      id: 'x-panel-welcome',
+      always: true,
+      active:true
+    }],
+    active_panel_index:0
+  },
+  watch:{
+    active_panel_index:function(val,old){
+
+      $('#' + this.tabs[old].id).removeClass('active')
+      $('#' + this.tabs[val].id).addClass('active')
+    }
   },
   methods: {
-    showTab() {
+    showTab(tab,index) {
+      this.active_panel_index  = index
+    },
+    closeTab(tab, index) {
+      var tabs = this.tabs
+      if (!tab.always) {
+        tab.vm.$destroy()
+        if (index ===  this.active_panel_index) {
+          this.active_panel_index = tabs.length-2
+        }
+        $('#' + tab.id).remove()
+        tabs.splice(index, 1)
+      }
 
     }
   }

@@ -31,6 +31,10 @@
     .x-panel.active{
       display: block;
     }
+    .close{
+      color:red;
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -43,8 +47,8 @@
   </div>
   <div class="right">
     <div id="tabs" class="tabs">
-      <div class="tab" v-for="tab in tabs" @click="showTab()">
-        {{tab.name}}
+      <div class="tab" v-for="(tab, index) in tabs" @click="showTab(tab,index)">
+        {{tab.name}}   <span class="close" v-if="!tab.always" @click.stop="closeTab(tab,index)"> 关闭</span>
       </div>
     </div>
     <div id="panels">
